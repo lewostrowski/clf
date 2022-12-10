@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+# Copy last modified file from given directory to working direcotry.
+# Optionally, a file can be renamed.
+# Multiple files are supported without rename option.
+# MIT License
+
+# Help function
+usage() {
+	echo "Usage: $(basename "${0}") [flag] [optional]
+This script will operate on files in a source directory specified by -d flag.
+
+-h	Print help.
+
+-d	Print current source directory.
+ 		+ [directory path] Change source directory.
+
+-c	Copy recursively last modified file to a working directory.
+		+ [file name] Copy and rename.
+
+-m	Move last modified file to a working directory.
+		+ [file name] Move and rename.
+"
+}
+
+# Print or change source directory
+# Arguments: path to source directory (optional)
+# Outputs: chagne SOURCEDIRNAME value in clfconfig.conf
+function source_dir() {
+	source clfconfig.conf
+	if (( ${#1} > 0 )); then
+		echo "SOURCEDIRNAME=${1}" > clfconfig.conf
+		echo "Source directory changed to: ${1}"
+	else
+		echo "Current source directory: ${SOURCEDIRNAME}"
+	fi
+}
+
+# Function that manipulate files
+# Arguments: mode ["copy"/"move"], file's new name (optional, n-files operation excluded)
+# Outputs: copy or move files from source directory into working directory
+function file_manipulation() {
+	source clfconfig.conf
+	if [[ -n "${2}" && "${2}" =~ ^[0-9]+$ ]]; then
+		local files_num="${2}"
+	else
+		local files_num=1
+	fi
+	
+	local declare a files=$(ls -t "${SOURCEDIRNAME}"| head -n "${files_num}")
+	
+	for file in "${files[@]}"; do
+		if [[ "${1}" == "Copy" ]]; then
+			cp -r "${SOURCEDIRNAME}/${file}" .
+		elif [[ "${1}" == "Move" ]]; then
+			mv "${SOURCEDIRNAME}/${file}" .
+		fi
+
+		echo "${1}: ${file}"
+
+		if [[ -n "${2}" && "${files_num}" == 1 ]]; then
+			(( ${#2}>0 )) && mv "${files[0]}" "${2}"
+			echo "Rename into: ${2}"
+		fi
+	done
+}
+
+# Check if config file exist
+# Outputs: pass if exist, create file with empty SOURCEDIRNAME value
+if ! [[ -f clfconfig.conf ]]; then
+	echo "Config file dosn't exist."
+	echo "Seting source directory to Downloads directory."
+	echo "Sorce directory can be changed with flag: -d path/to/dir"
+	echo "SOURCEDIRNAME=~/Downloads" > clfconfig.conf
+	source_dir
+fi
+
+# Flags
+# Usage: clf [flag] [optional]
+availableOptions="dcmh"
+while getopts ${availableOptions} arg; do
+	case ${arg} in
+		d) source_dir "${2}" ;; 
+		c) file_manipulation "Copy" "${2}" ;; 
+		m) file_manipulation "Move" "${2}" ;; 
+		h) usage ;; 
+	esac
+done
