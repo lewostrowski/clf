@@ -1,12 +1,17 @@
-# clf
+### About
 
 Copy last modified file from given directory to working direcotry. Optionally, a file can be renamed. Multiple files are supported without rename option.
 
 This script will automatically creates clfconfig.conf file with default source directory:
  `~/Downloads`
 
+### Usage
+Usage template:
+
+`$ bash cplf [flag] [optional]`
+
+### Help info:
 ```
-Usage: $ cplf [flag] [optional]
 This script will operate on files in a source directory specified by -d flag.
 
 -h  Print help.
