@@ -12,13 +12,13 @@ This script will operate on files in a source directory specified by -d flag.
 
 -h  Print help.
 
--d  Print current source directory.
-     + [directory path] Change source directory.
+-d  Print the current source directory.
+    + [directory path] Change source directory.
 
--c  Copy recursively last modified file to a working directory.
+-c  Copy recursively the last modified file to a working directory.
     + [file name] Copy and rename.
 
--m  Move last modified file to a working directory.
+-m  Move the last modified file to a working directory.
     + [file name] Move and rename.
 "
 }
