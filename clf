@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copy last modified file from given directory to working direcotry.
+# Copy the last modified file from the given directory to the working directory.
 # Optionally, a file can be renamed.
 # Multiple files are supported without rename option.
 # MIT License
@@ -24,8 +24,8 @@ This script will operate on files in a source directory specified by -d flag.
 }
 
 # Print or change source directory
-# Arguments: path to source directory (optional)
-# Outputs: chagne SOURCEDIRNAME value in clfconfig.conf
+# Arguments: path to the source directory (optional)
+# Outputs: change SOURCEDIRNAME value in clfconfig.conf
 function source_dir() {
   source clfconfig.conf
   if (( ${#1} > 0 )); then
@@ -36,9 +36,9 @@ function source_dir() {
   fi
 }
 
-# Function that manipulate files
+# Function that manipulates files
 # Arguments: mode ["copy"/"move"], file's new name (optional, n-files operation excluded)
-# Outputs: copy or move files from source directory into working directory
+# Outputs: copy or move files from the source directory into a working directory
 function file_manipulation() {
   source clfconfig.conf
   if [[ -n "${2}" && "${2}" =~ ^[0-9]+$ ]]; then
@@ -65,8 +65,8 @@ function file_manipulation() {
   done
 }
 
-# Check if config file exist
-# Outputs: pass if exist, create file with empty SOURCEDIRNAME value
+# Check if the config file exists
+# Outputs: pass if exist, create a file with default SOURCEDIRNAME value
 if ! [[ -f clfconfig.conf ]]; then
   echo "Config file dosn't exist."
   echo "Seting source directory to Downloads directory."
